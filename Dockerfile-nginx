@@ -1,0 +1,12 @@
+FROM slakah/docker-nginx
+
+RUN apk add --update tini bash && rm -rf /var/cache/apk/*
+
+COPY nginx/etc /etc
+RUN ls /etc/nginx/conf.d/
+COPY bin /
+
+RUN echo "daemon off;" >> /etc/nginx/nginx.conf
+
+ENTRYPOINT ["tini", "--", "/wait-for-file.sh", "/etc/letsencrypt/.restored", "--"]
+CMD ["nginx"]

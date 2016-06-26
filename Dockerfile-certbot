@@ -1,0 +1,15 @@
+FROM quay.io/letsencrypt/letsencrypt
+
+RUN apt-get update && apt-get install -y \
+  curl \
+  && rm -rf /var/lib/apt/lists/*
+
+ENV TINI_VERSION v0.9.0
+RUN curl -o /tini -L https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini \
+  && chmod +x /tini
+
+COPY bin /
+COPY certbot/etc /etc
+COPY certbot/docker-entrypoint.sh /
+
+ENTRYPOINT ["/tini", "--", "/wait-for-file.sh", "/etc/letsencrypt/.restored", "certbot"]

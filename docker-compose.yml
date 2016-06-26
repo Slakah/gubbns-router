@@ -1,0 +1,37 @@
+version: '2'
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile-nginx
+    volumes:
+      - /usr/share/nginx/html
+      - /etc/letsencrypt
+    ports:
+      - '80:80'
+      - '443:443'
+  certbot:
+    build:
+      context: .
+      dockerfile: Dockerfile-certbot
+    volumes_from:
+      - nginx
+    command: >
+      certonly
+      --non-interactive
+      --agree-tos
+      --webroot
+      --expand
+      --email jrc.collier@gmail.com
+      --webroot-path /usr/share/nginx/html
+      -d gubbns.com -d www.gubbns.com
+  dockup:
+    image: slakah/dockup-gs
+    volumes_from:
+      - certbot
+    command: >
+      gs://gubbns-backup/letsencrypt/
+      /etc/letsencrypt
+      --cron-time '* * * * *'
+      --backup-name letsencrypt
+      --gc-key '${GCLOUD_LETSENCRYPT_BACKUP_KEY}'
