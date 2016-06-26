@@ -32,6 +32,6 @@ services:
     command: >
       gs://gubbns-backup/letsencrypt/
       /etc/letsencrypt
-      --cron-time '* * * * *'
+      --cron-time '54 4 * * *'
       --backup-name letsencrypt
       --gc-key '${GCLOUD_LETSENCRYPT_BACKUP_KEY}'
