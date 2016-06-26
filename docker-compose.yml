@@ -7,6 +7,10 @@ services:
     volumes:
       - /usr/share/nginx/html
       - /etc/letsencrypt
+    external_links:
+      - gubbns_gubbns_1:gubbns
+    networks:
+      - gubbns
     ports:
       - '80:80'
       - '443:443'
@@ -35,3 +39,8 @@ services:
       --cron-time '54 4 * * *'
       --backup-name letsencrypt
       --gc-key '${GCLOUD_LETSENCRYPT_BACKUP_KEY}'
+
+networks:
+  gubbns:
+    external:
+      name: gubbns_default
