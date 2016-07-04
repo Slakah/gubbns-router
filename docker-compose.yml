@@ -14,6 +14,7 @@ services:
     ports:
       - '80:80'
       - '443:443'
+    restart: always
   certbot:
     build:
       context: .
@@ -29,6 +30,7 @@ services:
       --email jrc.collier@gmail.com
       --webroot-path /usr/share/nginx/html
       -d gubbns.com -d www.gubbns.com
+    restart: always
   dockup:
     image: slakah/dockup-gs
     volumes_from:
@@ -39,6 +41,7 @@ services:
       --cron-time '54 4 * * *'
       --backup-name letsencrypt
       --gc-key '${GCLOUD_LETSENCRYPT_BACKUP_KEY}'
+    restart: always
 
 networks:
   gubbns:
